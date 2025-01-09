@@ -63,7 +63,7 @@ def main():
                     elif user_choice == "6":
                         if delete_account(accounts, logged_in_account):
                             print("Your account has been deleted. Logging out...")
-                            break  # Exit to the main menu after deleting the account.
+                            break  
                     elif user_choice == "7":
                         print("Logging out...")
                         break
