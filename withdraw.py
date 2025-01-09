@@ -12,7 +12,7 @@ def withdraw_money(account):
                 continue  
             
             account['balance'] -= withdraw_amount
-            account['transactions'].append(f"Withdrawal: ${withdraw_amount:.2f}")
+            account['transactions'].append({'type': 'Withdrawal', 'amount': withdraw_amount})
             
             print(f"Withdrawal of ${withdraw_amount:.2f} successful. New balance: ${account['balance']:.2f}")
             break  
