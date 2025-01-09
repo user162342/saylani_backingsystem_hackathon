@@ -8,7 +8,7 @@ def deposit_money(account):
                 continue  
             
             account['balance'] += deposit_amount
-            account['transactions'].append(f"Deposit: ${deposit_amount:.2f}")
+            account['transactions'].append({'type': 'Deposit', 'amount': deposit_amount})
             
             print(f"Deposit of ${deposit_amount:.2f} successful. New balance: ${account['balance']:.2f}")
             break  
