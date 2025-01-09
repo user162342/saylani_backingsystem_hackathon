@@ -8,6 +8,7 @@ def transactions_list(account):
         print("-" * 40)
 
         for transaction in account['transactions']:
+            print(transaction)  
             transaction_type = transaction['type']
             amount = transaction['amount']
             if transaction_type == "Transfer":
