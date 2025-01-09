@@ -6,6 +6,7 @@ from transactions import transactions_list
 from deleteaccount import delete_account
 from viewaccounts import view_accounts, admin_total_deposits, admin_total_accounts
 from login import login
+from transfermoney import transfer_money
 
 
 def main():
@@ -42,9 +43,10 @@ def main():
                     print("\n1. Check Balance")
                     print("2. Deposit Money")
                     print("3. Withdraw Money")
-                    print("4. View Transactions")
-                    print("5. Delete Account")
-                    print("6. Logout")
+                    print("4. Transfer Money")
+                    print("5. View Transactions")
+                    print("6. Delete Account")
+                    print("7. Logout")
 
                     user_choice = input("Enter your choice: ")
 
@@ -55,12 +57,14 @@ def main():
                     elif user_choice == "3":
                         withdraw_money(logged_in_account)
                     elif user_choice == "4":
-                        transactions_list(logged_in_account)
+                        transfer_money(logged_in_account, accounts)
                     elif user_choice == "5":
+                        transactions_list(logged_in_account)
+                    elif user_choice == "6":
                         if delete_account(accounts, logged_in_account):
                             print("Your account has been deleted. Logging out...")
                             break  # Exit to the main menu after deleting the account.
-                    elif user_choice == "6":
+                    elif user_choice == "7":
                         print("Logging out...")
                         break
                     else:
@@ -72,7 +76,8 @@ def main():
                     print("2. Total Deposits")
                     print("3. Total Accounts")
                     print("4. Delete an Account")
-                    print("5. Logout")
+                    print("5. Transfer Money")
+                    print("6. Logout")
 
                     admin_choice = input("Enter your choice: ")
 
@@ -86,6 +91,8 @@ def main():
                         print("Deleting an account...")
                         delete_account(accounts)  # Admin can delete any account.
                     elif admin_choice == "5":
+                        transfer_money(logged_in_account, accounts)
+                    elif admin_choice == "6":
                         print("Logging out...")
                         break
                     else:
@@ -94,4 +101,6 @@ def main():
         elif choice == "3":
             print("Exiting the system...")
             break
+
+
 main()
