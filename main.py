@@ -1,3 +1,5 @@
+# main.py
+from uuid import uuid4
 from accounts import create_account
 from checkbalance import check_balance
 from depositmoney import deposit_money
@@ -7,7 +9,6 @@ from deleteaccount import delete_account
 from viewaccounts import view_accounts, admin_total_deposits, admin_total_accounts
 from login import login
 from transfermoney import transfer_money
-
 
 def main():
     accounts = []
@@ -61,7 +62,7 @@ def main():
                     elif user_choice == "5":
                         transactions_list(logged_in_account)
                     elif user_choice == "6":
-                        if delete_account(accounts, logged_in_account):
+                        if delete_account(accounts, logged_in_account):  
                             print("Your account has been deleted. Logging out...")
                             break  
                     elif user_choice == "7":
@@ -75,13 +76,14 @@ def main():
                     print("\n1. View All Accounts")
                     print("2. Total Deposits")
                     print("3. Total Accounts")
-                    print("4. Delete an Account")
-                    print("5. Transfer Money")
-                    print("6. Check Balance")
-                    print("7. Deposit Money")
-                    print("8. Withdraw Money")
-                    print("9. View Transactions")
-                    print("10. Logout")
+                    print("4. Delete a Non-Admin Account")
+                    print("5. Delete Your Own Account")
+                    print("6. Transfer Money")
+                    print("7. Check Balance")
+                    print("8. Deposit Money")
+                    print("9. Withdraw Money")
+                    print("10. View Transactions")
+                    print("11. Logout")
 
                     admin_choice = input("Enter your choice: ")
 
@@ -92,33 +94,36 @@ def main():
                     elif admin_choice == "3":
                         admin_total_accounts(accounts)
                     elif admin_choice == "4":
-                        print("Deleting an account...")
-                        if delete_account(accounts):  
-                            print("Account deleted. Logging out...")
+                        if delete_account(accounts, logged_in_account):  
+                            print("The non-admin account has been deleted.")
                             break  
                     elif admin_choice == "5":
-                        transfer_money(logged_in_account, accounts)
+                        logged_in_account["admin_own_account_logged"] = True
+                        if delete_account(accounts, logged_in_account):
+                            print("Your admin account has been deleted. Logging out...")
+                            break
+                        logged_in_account["admin_own_account_logged"] = False
                     elif admin_choice == "6":
-                        check_balance(logged_in_account)
+                        transfer_money(logged_in_account, accounts)
                     elif admin_choice == "7":
-                        deposit_money(logged_in_account)
+                        check_balance(logged_in_account)
                     elif admin_choice == "8":
-                        withdraw_money(logged_in_account)
+                        deposit_money(logged_in_account)
                     elif admin_choice == "9":
-                        transactions_list(logged_in_account)
+                        withdraw_money(logged_in_account)
                     elif admin_choice == "10":
+                        transactions_list(logged_in_account)
+                    elif admin_choice == "11":
                         print("Logging out...")
                         break
                     else:
                         print("Invalid choice. Please try again.")
 
-            
             print("Returning to the main menu...")
-            break  
+            continue
 
         elif choice == "3":
             print("Exiting the system...")
             break
-
 
 main()
