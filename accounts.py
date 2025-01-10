@@ -1,3 +1,5 @@
+import uuid
+
 def create_account():
     while True:
         try:
@@ -32,7 +34,11 @@ def create_account():
                 print("Invalid account type. Please choose 'normal' or 'admin'.")
                 continue
 
+           
+            account_id = str(uuid.uuid4()) 
+
             account = {
+                "id": account_id, 
                 "name": user_name,
                 "password": user_password,
                 "age": user_age,
