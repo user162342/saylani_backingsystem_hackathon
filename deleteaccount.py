@@ -1,32 +1,62 @@
+# deleteaccount.py
 def delete_account(accounts, logged_in_account=None):
-    if logged_in_account and logged_in_account["account_type"] == "normal":
-        confirm = input(f"Are you sure you want to delete your account, {logged_in_account['name']}? (y/n): ").lower()
-        if confirm == "y":
-            accounts.remove(logged_in_account)
-            print("Account deleted successfully.")
-            return True
-        else:
-            print("Account deletion cancelled.")
-            return False
-    else:
-        if not accounts:
-            print("No accounts available to delete.")
-            return
+    if logged_in_account:
+        # If admin is logged in and wants to delete their own account
+        if logged_in_account["account_type"] == "admin" and logged_in_account.get("admin_own_account_logged", False):
+            confirm = input(f"Are you sure you want to delete your own admin account, {logged_in_account['name']}? (y/n): ").lower()
+            if confirm == "y":
+                accounts.remove(logged_in_account)
+                print(f"Your admin account, {logged_in_account['name']}, has been deleted.")
+                return True
+            else:
+                print("Account deletion cancelled.")
+                return False
 
-        print("\nAvailable accounts:")
-        for idx, account in enumerate(accounts):
-            print(f"{idx + 1}. Name: {account['name']}, Type: {account['account_type']}")
+        # If admin wants to delete a non-admin account
+        elif logged_in_account["account_type"] == "admin":
+            print("\n--- Account List (excluding other admins) ---")
+            non_admin_accounts = [account for account in accounts if account["account_type"] == "normal"]
+            if not non_admin_accounts:
+                print("No accounts available for deletion.")
+                return False
 
-        try:
-            choice = int(input("Enter the number of the account you want to delete: ")) - 1
-            if 0 <= choice < len(accounts):
-                confirm = input(f"Are you sure you want to delete the account of {accounts[choice]['name']}? (y/n): ").lower()
+            for i, account in enumerate(non_admin_accounts, 1):
+                print(f"{i}. {account['name']} - {account['balance']}")
+
+            try:
+                account_to_delete_index = int(input("Enter the number of the account you want to delete: ")) - 1
+                if account_to_delete_index < 0 or account_to_delete_index >= len(non_admin_accounts):
+                    print("Invalid choice. Please try again.")
+                    return False
+
+                account_to_delete = non_admin_accounts[account_to_delete_index]
+                confirm = input(f"Are you sure you want to delete {account_to_delete['name']}? (y/n): ").lower()
+
                 if confirm == "y":
-                    deleted_account = accounts.pop(choice)
-                    print(f"Account {deleted_account['name']} deleted successfully.")
+                    accounts.remove(account_to_delete)
+                    print(f"Account {account_to_delete['name']} has been deleted.")
+                    return False
                 else:
                     print("Account deletion cancelled.")
+                    return False
+
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+                return False
+
+        # If not an admin, allow deletion of own account
+        elif logged_in_account["account_type"] == "normal":
+            confirm = input(f"Are you sure you want to delete your own account, {logged_in_account['name']}? (y/n): ").lower()
+            if confirm == "y":
+                accounts.remove(logged_in_account)
+                print(f"Your account, {logged_in_account['name']}, has been deleted.")
+                return True
             else:
-                print("Invalid choice. Please try again.")
-        except ValueError:
-            print("Invalid input. Please enter a valid number.")
+                print("Account deletion cancelled.")
+                return False
+        else:
+            print("Invalid account type.")
+            return False
+    else:
+        print("No logged-in account provided for deletion.")
+        return False
